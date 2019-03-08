@@ -67,3 +67,6 @@ with volume indicators
 Epoch 200/200
 23070/23070 [==============================] - 5s 200us/sample - loss: 0.2230 - acc: 0.8855 - val_loss: 1.0505 - val_acc: 0.7734
 
+5000x3
+Epoch 200/200
+23070/23070 [==============================] - 16s 683us/sample - loss: 0.2113 - acc: 0.9007 - val_loss: 0.8755 - val_acc: 0.7866

@@ -8,7 +8,7 @@ from matplotlib import pyplot as plt
 
 def import_data():
   print("Importing data")
-  return pd.read_json("data/eth_hourly_full.json").transpose()
+  return pd.read_json("data/btc_hourly_full.json").transpose()
 
 
 def future_sma_bias(s,l):
@@ -24,13 +24,13 @@ def min_max_normalize(s):
 
 def norm_sma_diff(s,l):
   sma = s.rolling(window = l).mean()
-  dif = s-sma
+  dif = (s-sma) / (sma+1)
   return std_normalize(dif)
+
 
 def split_classification():
   model = keras.Sequential([
     keras.layers.Dense(200, activation=tf.nn.relu, input_shape=[len(train_data.keys())]),
-    keras.layers.Dense(200, activation=tf.nn.relu),
     keras.layers.Dense(200, activation=tf.nn.relu),
     keras.layers.Dense(2, activation=tf.nn.softmax)
   ])
@@ -63,7 +63,8 @@ def regression():
   
 
 
-#df = import_data()
+df = import_data()
+
 
 learn_data = pd.DataFrame({
   'sma5' : norm_sma_diff(df['close'], 5),
