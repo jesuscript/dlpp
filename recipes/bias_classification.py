@@ -19,23 +19,26 @@ def make_train_data(pdata):
     'sma50' : pdata.sma_diff("close",50),
     'sma100' : pdata.sma_diff("close",100),
     'sma200' : pdata.sma_diff("close",200),
+    'sma400' : pdata.sma_diff("close",400),
     'vt_sma5' : pdata.sma_diff('volumeto', 5),
     'vt_sma50' : pdata.sma_diff('volumeto', 50),
     'vt_sma200' : pdata.sma_diff('volumeto', 200),
+    'vt_sma400' : pdata.sma_diff('volumeto', 400),
     'obv' : pdata.OBV(), 
     'obvm_5' : pdata.OBVM(5),
     'obvm_50' : pdata.OBVM(50),
     'obvm_200' : pdata.OBVM(200),
-    'labels' : pdata.future_sma_bias('close',24)
-  }).dropna()
+    'obvm_400' : pdata.OBVM(400),
+    'labels' : pdata.future_sma_bias('close',12)
+  }).dropna()[20000:]
 
   return (learn_data, learn_data.pop('labels'))
 
 def make_model():
   model = keras.Sequential([
-    keras.layers.Dense(500, activation=tf.nn.relu, input_shape=[len(train_data.keys())]),
-    keras.layers.Dense(500, activation=tf.nn.relu),
-    keras.layers.Dense(500, activation=tf.nn.relu),
+    keras.layers.Dense(2000, activation=tf.nn.relu, input_shape=[len(train_data.keys())]),
+    keras.layers.Dense(2000, activation=tf.nn.relu),
+    keras.layers.Dense(2000, activation=tf.nn.relu),
     keras.layers.Dense(2, activation=tf.nn.softmax)
   ])
 
@@ -61,7 +64,7 @@ def run(save=False):
   else:
     callbacks=[]
     
-  history = model.fit(train_data, train_labels.values, epochs=5, validation_split=0.2, callbacks=callbacks)
+  history = model.fit(train_data, train_labels.values, epochs=50, validation_split=0.05, callbacks=callbacks)
     
   return history
 
@@ -69,7 +72,7 @@ def run(save=False):
 # %load_ext autoreload
 # %autoreload 2
 
-pdata = get_price_data()
+#pdata = get_price_data()
 train_data, train_labels = make_train_data(pdata)
 
 model = make_model()
